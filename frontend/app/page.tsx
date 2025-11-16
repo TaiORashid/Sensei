@@ -21,10 +21,10 @@ export default function Home() {
     }
 
     setSelectedFile(file);
-    // Store file in sessionStorage for dashboard access
+    // Store file in sessionStorage for building page access
     const fileUrl = URL.createObjectURL(file);
     sessionStorage.setItem("uploadedPDF", fileUrl);
-    router.push("/dashboard");
+    router.push("/building");
   };
 
   const handleUploadClick = () => {

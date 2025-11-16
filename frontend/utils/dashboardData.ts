@@ -53,18 +53,17 @@ export interface DashboardData {
   };
 }
 
-// Load and parse the JSON data
-export async function loadDashboardData(): Promise<DashboardData | null> {
+// Load dashboard data from sessionStorage (from orchestrator.py)
+export function loadDashboardData(): DashboardData | null {
   try {
-    const response = await fetch('/DSAoutputEX.json');
-    if (!response.ok) {
-      console.error('Failed to load dashboard data');
+    const storedData = sessionStorage.getItem("dashboardData");
+    if (!storedData) {
       return null;
     }
-    const data = await response.json();
-    return data.data as DashboardData;
+    const data = JSON.parse(storedData);
+    return data as DashboardData;
   } catch (error) {
-    console.error('Error loading dashboard data:', error);
+    console.error("Error loading dashboard data:", error);
     return null;
   }
 }

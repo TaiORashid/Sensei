@@ -39,18 +39,17 @@ export default function DashboardPage() {
     }
   }, []);
 
-  // Load JSON data
+  // Load JSON data from sessionStorage (from orchestrator.py)
   useEffect(() => {
-    loadDashboardData().then((data) => {
-      if (data) {
-        setDashboardData(data);
-        // Set default to first topic's first subtopic
-        if (data.structure.topics.length > 0 && data.structure.topics[0].subtopics.length > 0) {
-          const firstSubtopic = data.structure.topics[0].subtopics[0];
-          setSelectedSubtopicId(firstSubtopic.id);
-        }
+    const data = loadDashboardData();
+    if (data) {
+      setDashboardData(data);
+      // Set default to first topic's first subtopic
+      if (data.structure.topics.length > 0 && data.structure.topics[0].subtopics.length > 0) {
+        const firstSubtopic = data.structure.topics[0].subtopics[0];
+        setSelectedSubtopicId(firstSubtopic.id);
       }
-    });
+    }
   }, []);
 
   // Update question stack when subtopic changes
