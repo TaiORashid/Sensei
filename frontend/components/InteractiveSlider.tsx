@@ -68,12 +68,12 @@ export default function InteractiveSlider({
   return (
     <div
       ref={containerRef}
-      className="relative w-full h-[400px] overflow-hidden cursor-col-resize"
+      className="relative w-full h-[400px] overflow-hidden cursor-col-resize rounded-lg"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
       {/* Image 2 (background, shows on right side when cursor is left of center) */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 rounded-lg overflow-hidden">
         {image2.startsWith('data:') ? (
           <img
             src={image2}
@@ -93,7 +93,7 @@ export default function InteractiveSlider({
 
       {/* Image 1 (foreground, shows on left side, initially 100%) */}
       <div
-        className="absolute inset-0 overflow-hidden"
+        className="absolute inset-0 overflow-hidden rounded-l-lg"
         style={{ width: `${sliderPosition}%` }}
       >
         {image1.startsWith('data:') ? (

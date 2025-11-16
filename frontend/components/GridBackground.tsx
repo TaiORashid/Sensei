@@ -17,7 +17,7 @@ interface GridBackgroundProps {
 export default function GridBackground({
   squareSize = 20,
   spacing = 4,
-  cursorRadius = 150,
+  cursorRadius = 300,
 }: GridBackgroundProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [squares, setSquares] = useState<GridSquare[]>([]);
@@ -115,7 +115,11 @@ export default function GridBackground({
     <div
       ref={containerRef}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ backgroundColor: "#000000" }}
+      style={{ 
+        backgroundColor: "#000000",
+        minHeight: "100vh",
+        height: "100%"
+      }}
     >
       {squares.map((square, index) => (
         <div

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 import InteractiveSlider from "@/components/InteractiveSlider";
 import GridBackground from "@/components/GridBackground";
@@ -10,56 +10,6 @@ export default function Home() {
   const router = useRouter();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const pageRef = useRef<HTMLDivElement>(null);
-
-  // Prevent scrolling past page boundaries
-  useEffect(() => {
-    let ticking = false;
-    
-    const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          if (!pageRef.current) return;
-          
-          const scrollTop = window.scrollY || document.documentElement.scrollTop;
-          const scrollHeight = document.documentElement.scrollHeight;
-          const clientHeight = window.innerHeight;
-
-          // Hard stop at top
-          if (scrollTop < 0) {
-            window.scrollTo({ top: 0, behavior: 'auto' });
-          }
-          
-          // Hard stop at bottom
-          if (scrollTop + clientHeight > scrollHeight) {
-            window.scrollTo({ top: scrollHeight - clientHeight, behavior: 'auto' });
-          }
-          
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("wheel", (e) => {
-      const scrollTop = window.scrollY || document.documentElement.scrollTop;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const clientHeight = window.innerHeight;
-      
-      // Prevent scrolling past boundaries
-      if (scrollTop <= 0 && e.deltaY < 0) {
-        e.preventDefault();
-      }
-      if (scrollTop + clientHeight >= scrollHeight && e.deltaY > 0) {
-        e.preventDefault();
-      }
-    }, { passive: false });
-    
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -71,6 +21,9 @@ export default function Home() {
     }
 
     setSelectedFile(file);
+    // Store file in sessionStorage for dashboard access
+    const fileUrl = URL.createObjectURL(file);
+    sessionStorage.setItem("uploadedPDF", fileUrl);
     router.push("/dashboard");
   };
 
@@ -83,25 +36,35 @@ export default function Home() {
     console.log("Open Overlay clicked");
   };
 
-  // Placeholder images - replace with actual images
-  // For now using a gradient placeholder - replace with actual image paths
-  const image1 = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23f0f0f0' width='800' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='24' text-anchor='middle' dy='.3em' fill='%23999'%3EImage 1%3C/text%3E%3C/svg%3E";
-  const image2 = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect fill='%23e0e0e0' width='800' height='400'/%3E%3Ctext x='50%25' y='50%25' font-size='24' text-anchor='middle' dy='.3em' fill='%23999'%3EImage 2%3C/text%3E%3C/svg%3E";
+  // Images for the interactive slider
+  const image1 = "/images/landingpageimageone.png";
+  const image2 = "/images/landingpagepicture2.png";
 
   return (
-    <div ref={pageRef} className="min-h-screen bg-black relative">
+    <div className="min-h-screen bg-black relative">
       {/* Grid Background */}
-      <GridBackground squareSize={20} spacing={4} cursorRadius={150} />
+      <GridBackground squareSize={20} spacing={4} cursorRadius={300} />
 
-      {/* Logo in top left */}
+      {/* Logo in top left with white container */}
       <div className="absolute top-6 left-6 z-20">
-        <Image
-          src="/images/logo/logo.png"
-          alt="Sensei Logo"
-          width={180}
-          height={54}
-          priority
-        />
+        <div className="bg-white rounded-lg p-3 shadow-lg">
+          <Image
+            src="/images/logo/logo.png"
+            alt="Sensei Logo"
+            width={180}
+            height={54}
+            priority
+          />
+        </div>
+      </div>
+
+      {/* Sign In button in top right */}
+      <div className="absolute top-6 right-6 z-20">
+        <button
+          className="bg-white text-black px-8 py-4 rounded-lg text-lg hover:bg-gray-100 transition-colors shadow-lg dm-sans-button"
+        >
+          Sign In
+        </button>
       </div>
 
       {/* Main content */}
@@ -130,8 +93,7 @@ export default function Home() {
             {/* PDF Upload Button */}
             <button
               onClick={handleUploadClick}
-              className="bg-white text-black px-8 py-4 rounded-lg text-lg hover:bg-gray-100 transition-colors shadow-lg w-full sm:w-auto playfair-display"
-              style={{ fontFamily: '"Playfair Display", serif', fontWeight: 700, fontStyle: 'normal' }}
+              className="bg-white text-black px-8 py-4 rounded-lg text-lg hover:bg-gray-100 transition-colors shadow-lg w-full sm:w-auto dm-sans-button"
             >
               {selectedFile ? `Uploaded: ${selectedFile.name}` : "Upload PDF"}
             </button>
@@ -146,8 +108,7 @@ export default function Home() {
             {/* Open Overlay Button */}
             <button
               onClick={handleOpenOverlay}
-              className="bg-white text-black px-8 py-4 rounded-lg text-lg hover:bg-gray-100 transition-colors shadow-lg w-full sm:w-auto playfair-display"
-              style={{ fontFamily: '"Playfair Display", serif', fontWeight: 700, fontStyle: 'normal' }}
+              className="bg-white text-black px-8 py-4 rounded-lg text-lg hover:bg-gray-100 transition-colors shadow-lg w-full sm:w-auto dm-sans-button"
             >
               Open Overlay
             </button>
