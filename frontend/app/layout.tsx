@@ -1,10 +1,16 @@
-import { Poppins } from "next/font/google";
+import type { Metadata } from "next";
+import { Playfair_Display } from 'next/font/google';
 import "./globals.css";
-import Header from "@/components/Layout/Header";
-import Footer from "@/components/Layout/Footer";
-import { ThemeProvider } from "next-themes";
-import ScrollToTop from "@/components/ScrollToTop";
-const font = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], });
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['400', '700', '900'],
+});
+
+export const metadata: Metadata = {
+  title: "Sensei - Where your lecture slides finally make sense",
+  description: "Transform your lecture slides into meaningful insights",
+};
 
 export default function RootLayout({
   children,
@@ -12,19 +18,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${font.className}`}>
-        <ThemeProvider
-          attribute="class"
-          enableSystem={true}
-          defaultTheme="light"
-        >
-          <Header />
-          {children}
-          <Footer />
-          <ScrollToTop />
-        </ThemeProvider>
-      </body>
+    <html lang="en" className={playfair.className}>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+      <body>{children}</body>
     </html>
   );
 }
+
